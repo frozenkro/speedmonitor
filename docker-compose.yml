@@ -1,0 +1,28 @@
+services:
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb2
+    volumes: 
+      - /data:/var/lib/influxdb2:rw
+    env_file: 
+      ./speedmonitor/.env
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_ORG=speedmonitor_org
+      - DOCKER_INFLUXDB_INIT_BUCKET=results
+      - DOCKER_INFLUXDB_INIT_RETENTION=26w
+    ports:
+      - "8086:8086"
+    restart: unless-stopped
+
+  app:
+    build: .
+    ports:
+      - "8000:5000"
+    env_file: 
+      ./speedmonitor/.env
+    environment:
+      - SPEEDMONITOR_DB_LOCATION=http://influxdb:8086
+      - SPEEDMONITOR_DB_ORG=speedmonitor_org
+      - SPEEDMONITOR_DB_BUCKET=results
+
