@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-co-op/gocron"
 	"github.com/influxdata/influxdb-client-go/v2"
-	"github.com/joho/godotenv"
 	"github.com/showwin/speedtest-go/speedtest"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -22,14 +21,10 @@ type SpeedData struct {
 
 var dbUrl, dbToken, dbOrg, dbBucket string
 
-func init() {
-	checkError(godotenv.Load())
-}
-
 func main() {
 
 	logger := &lumberjack.Logger{
-		Filename:   "./app.log",
+		Filename:   "/var/log/speedmonitor.log",
 		MaxSize:    10,
 		MaxBackups: 3,
 		MaxAge:     28,

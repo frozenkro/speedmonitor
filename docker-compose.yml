@@ -3,9 +3,9 @@ services:
     image: influxdb:latest
     container_name: influxdb2
     volumes: 
-      - /data:/var/lib/influxdb2:rw
+      - /dckrmnt/data:/var/lib/influxdb2:rw
     env_file: 
-      ./speedmonitor/.env
+      .env
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_ORG=speedmonitor_org
@@ -15,12 +15,20 @@ services:
       - "8086:8086"
     restart: unless-stopped
 
+  grafana:
+    image: grafana/grafana-enterprise
+    ports:
+      - "3000:3000"
+    volumes:
+      - "/dckrmnt/grafana_storage:/var/lib/grafana"
+
+
   app:
     build: .
     ports:
       - "8000:5000"
     env_file: 
-      ./speedmonitor/.env
+      .env
     environment:
       - SPEEDMONITOR_DB_LOCATION=http://influxdb:8086
       - SPEEDMONITOR_DB_ORG=speedmonitor_org
