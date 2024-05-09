@@ -71,13 +71,13 @@ func saveTest(data SpeedData) {
 
 	sp := influxdb2.NewPointWithMeasurement("speed").
 		AddTag("unit", "byte").
-		AddField("download", data.DLSpeed).
-		AddField("upload", data.ULSpeed).
+		AddField("download", float64(data.DLSpeed)).
+		AddField("upload", float64(data.ULSpeed)).
 		SetTime(data.Time)
 
 	lp := influxdb2.NewPointWithMeasurement("latency").
 		AddTag("unit", "ms").
-		AddField("delay", data.Latency).
+		AddField("delay", float64(data.Latency)).
 		SetTime(data.Time)
 
 	sp_err := writeAPI.WritePoint(context.Background(), sp)
